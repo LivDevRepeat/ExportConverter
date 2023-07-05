@@ -39,7 +39,7 @@
       canvasEl.id = `canvas${index}`;
       $("#canvasContainer").append(canvasEl);
     
-      let timestap = new Date(item.update_time * 1000);
+      let timestap = new Date(item.update_time * 1000).toLocaleDateString('de-DE', {year: 'numeric', month: '2-digit', day:'2-digit'});
 
       console.log(item)
       let canvas = new fabric.Canvas(`canvas${index}`, { width: 500, height: 200 });
