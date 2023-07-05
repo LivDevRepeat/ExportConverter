@@ -12,6 +12,7 @@
 
   <script>
   var data;
+
   $(document).ready(function() {
     $("#jsonFile").change(function(e) {
       let file = e.target.files[0];
@@ -44,51 +45,46 @@
       let canvas = new fabric.Canvas(`canvas${index}`, { width: 500});
       let text = new fabric.Textbox(`Title: ${item.title}\nLast Update: ${timestamp}`, {
         left: 10,
-        top:topOffset,
+        top: topOffset,
         fontFamily: 'Arial',
         fill: '#000',
         fontSize: 14,
-        width:490
+        width: 490
       });
       topOffset += text.height * text.scaleY + margin;
       let obj = item.mapping;
-  
-  
-     for (let key in obj) {
-      
-  if (obj.hasOwnProperty(key)) {
-    if( obj[key].message != null){
-        let author = obj[key].message.author.role 
-        let message = obj[key].message.content.parts[0];
-       let textbox = new fabric.Textbox(` ${author} : ${message}`, {
-        left : 20,
-        top:  topOffset,
-        fontFamily: 'Arial',
-        fill: '#000',
-        fontSize: 10,
-        width:480
-      })
-      canvas.add(textbox);
-      topOffset += textbox.height * textbox.scaleY + margin;
-    } 
-  }
-}
+
+      for (let key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          if (obj[key].message != null) {
+            let author = obj[key].message.author.role;
+            let message = obj[key].message.content.parts[0];
+            let textbox = new fabric.Textbox(`${author}: ${message}`, {
+              left: 20,
+              top: topOffset,
+              fontFamily: 'Arial',
+              fill: '#000',
+              fontSize: 10,
+              width: 480
+            });
+            canvas.add(textbox);
+            topOffset += textbox.height * textbox.scaleY + margin;
+          }
+        }
+      }
+
       canvas.add(text);
-      canvas.setHeight( topOffset+20);
-     canvas.renderAll();// brauchen wir eigentlich nicht da wir eh nur die bilder wolllen 
-    
+      canvas.setHeight(topOffset + 20);
+      canvas.renderAll();
 
       let image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
 
       let link = document.createElement('a');
-      link.download = `${item.title}_${item.update_time}.png`;// we want the last date
+      link.download = `${item.title}_${item.update_time}.png`;
       link.href = image;
-     // link.click();
-
-
+      link.click();
     });
   }
   </script>
 </body>
 </html>
-
