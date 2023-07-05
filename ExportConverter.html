@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>JSON Upload and Image Generator</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fabric"></script>
+</head>
+<body>
+  <input type="file" id="jsonFile" name="jsonFile" accept=".json">
+  <button id="downloadBtn" disabled>Download Images</button>
+  <div id="canvasContainer"></div>
+
+  <script>
+  var data;
+  $(document).ready(function() {
+    $("#jsonFile").change(function(e) {
+      let file = e.target.files[0];
+      if (file) {
+        let reader = new FileReader();
+        reader.onload = function(event) {
+          data = JSON.parse(event.target.result);
+          $("#downloadBtn").prop('disabled', false);
+        };
+        reader.readAsText(file);
+      }
+    });
+
+    $("#downloadBtn").click(function() {
+      if (data) {
+        generateImages(data);
+      }
+    });
+  });
+
+  function generateImages(data) {
+    $("#canvasContainer").empty(); // Clear the container before adding new canvases
+    data.forEach((item, index) => {
+      let canvasEl = document.createElement('canvas');
+      canvasEl.id = `canvas${index}`;
+      $("#canvasContainer").append(canvasEl);
+      let timestamp = new Date(item.update_time * 1000).toLocaleDateString('de-DE', {year: 'numeric', month: '2-digit', day:'2-digit', hour: '2-digit',hour12: false, minute: '2-digit'});
+      let topOffset = 10;
+      let margin = 10; 
+      let canvas = new fabric.Canvas(`canvas${index}`, { width: 500});
+      let text = new fabric.Textbox(`Title: ${item.title}\nLast Update: ${timestamp}`, {
+        left: 10,
+        top:topOffset,
+        fontFamily: 'Arial',
+        fill: '#000',
+        fontSize: 14,
+        width:490
+      });
+      topOffset += text.height * text.scaleY + margin;
+      let obj = item.mapping;
+  
+  
+     for (let key in obj) {
+      
+  if (obj.hasOwnProperty(key)) {
+    if( obj[key].message != null){
+        let author = obj[key].message.author.role 
+        let message = obj[key].message.content.parts[0];
+       let textbox = new fabric.Textbox(` ${author} : ${message}`, {
+        left : 20,
+        top:  topOffset,
+        fontFamily: 'Arial',
+        fill: '#000',
+        fontSize: 10,
+        width:480
+      })
+      canvas.add(textbox);
+      topOffset += textbox.height * textbox.scaleY + margin;
+    } 
+  }
+}
+      canvas.add(text);
+      canvas.setHeight( topOffset+20);
+     canvas.renderAll();// brauchen wir eigentlich nicht da wir eh nur die bilder wolllen 
+    
+
+      let image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+
+      let link = document.createElement('a');
+      link.download = `${item.title}_${item.update_time}.png`;// we want the last date
+      link.href = image;
+     // link.click();
+
+
+    });
+  }
+  </script>
+</body>
+</html>
+
