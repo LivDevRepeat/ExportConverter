@@ -38,10 +38,12 @@
       let canvasEl = document.createElement('canvas');
       canvasEl.id = `canvas${index}`;
       $("#canvasContainer").append(canvasEl);
+    
+      let timestap = new Date(item.update_time * 1000);
 
       console.log(item)
       let canvas = new fabric.Canvas(`canvas${index}`, { width: 500, height: 200 });
-      let text = new fabric.Textbox(`Title: ${item.title}\nResponse: ${item.update_time}`, {
+      let text = new fabric.Textbox(`Title: ${item.title}\nResponse: ${timestamp}`, {
         left: 10,
         top: 10,
         fontFamily: 'Arial',
