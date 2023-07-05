@@ -39,29 +39,34 @@
       canvasEl.id = `canvas${index}`;
       $("#canvasContainer").append(canvasEl);
       let timestamp = new Date(item.update_time * 1000).toLocaleDateString('de-DE', {year: 'numeric', month: '2-digit', day:'2-digit', hour: '2-digit',hour12: false, minute: '2-digit'});
-     
-      let canvas = new fabric.Canvas(`canvas${index}`, { width: 500, height: 200 });
+      let topOffset = 10;
+      let margin = 10; 
+      let canvas = new fabric.Canvas(`canvas${index}`, { width: 500});
       let text = new fabric.Textbox(`Title: ${item.title}\nLast Update: ${timestamp}`, {
-        left: 100,
+        left: 10,
+        top:topOffset,
         fontFamily: 'Arial',
         fill: '#000',
-        fontSize: 14
+        fontSize: 14,
+        width:490
       });
+      topOffset += text.height * text.scaleY + margin;
       let obj = item.mapping;
+  
+  
      for (let key in obj) {
-        let topOffset = 20;
-        let margin = 10; 
+      
   if (obj.hasOwnProperty(key)) {
     if( obj[key].message != null){
         let author = obj[key].message.author.role 
         let message = obj[key].message.content.parts[0];
        let textbox = new fabric.Textbox(` ${author} : ${message}`, {
-        left : 0,
+        left : 20,
         top:  topOffset,
         fontFamily: 'Arial',
         fill: '#000',
         fontSize: 10,
-        width:500
+        width:480
       })
       canvas.add(textbox);
       topOffset += textbox.height * textbox.scaleY + margin;
@@ -69,7 +74,8 @@
   }
 }
       canvas.add(text);
-      canvas.renderAll();
+    //  canvas.renderAll();
+      canvas.setHeight( topOffset+20);
 
       let image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
 
