@@ -49,8 +49,23 @@
       });
       let obj = item.mapping;
      for (let key in obj) {
+        let topOffset = 20;
+        let margin = 10; 
   if (obj.hasOwnProperty(key)) {
-    console.log(key, obj[key]);
+    if( obj[key].message != null){
+        let author = obj[key].message.author.role 
+        let message = obj[key].message.content.parts[0];
+       let textbox = new fabric.Textbox(` ${author} : ${message}`, {
+        left : 0,
+        top:  topOffset,
+        fontFamily: 'Arial',
+        fill: '#000',
+        fontSize: 10,
+        width:500
+      })
+      canvas.add(textbox);
+      topOffset += textbox.height * textbox.scaleY + margin;
+    } 
   }
 }
       canvas.add(text);
