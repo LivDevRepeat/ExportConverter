@@ -39,8 +39,9 @@
       canvasEl.id = `canvas${index}`;
       $("#canvasContainer").append(canvasEl);
 
+      console.log(item)
       let canvas = new fabric.Canvas(`canvas${index}`, { width: 500, height: 200 });
-      let text = new fabric.Textbox(`Prompt: ${item.prompt}\nResponse: ${item.response}`, {
+      let text = new fabric.Textbox(`Title: ${item.title}\nResponse: ${item.update_time}`, {
         left: 10,
         top: 10,
         fontFamily: 'Arial',
@@ -53,11 +54,11 @@
       let image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
 
       let link = document.createElement('a');
-      link.download = `${item.prompt}_${index}.png`;
+      link.download = `${item.title}_${item.update_time}.png`;// we want the last date
       link.href = image;
       link.click();
 
-      console.log(data);
+
     });
   }
   </script>
