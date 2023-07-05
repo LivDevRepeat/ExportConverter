@@ -38,21 +38,21 @@
       let canvasEl = document.createElement('canvas');
       canvasEl.id = `canvas${index}`;
       $("#canvasContainer").append(canvasEl);
-    
-      console.log(item.update_time)
-      let timestamp = new Date(item.update_time * 1000).toLocaleDateString('de-DE', {year: 'numeric', month: '2-digit', day:'2-digit', hour: '2-digit',
-  hour12: false,
-  minute: '2-digit'});
-
+      let timestamp = new Date(item.update_time * 1000).toLocaleDateString('de-DE', {year: 'numeric', month: '2-digit', day:'2-digit', hour: '2-digit',hour12: false, minute: '2-digit'});
      
       let canvas = new fabric.Canvas(`canvas${index}`, { width: 500, height: 200 });
-      let text = new fabric.Textbox(`Title: ${item.title}\nResponse: ${timestamp}`, {
-        left: 10,
-        top: 10,
+      let text = new fabric.Textbox(`Title: ${item.title}\nLast Update: ${timestamp}`, {
+        left: 100,
         fontFamily: 'Arial',
         fill: '#000',
         fontSize: 14
       });
+      let obj = item.mapping;
+     for (let key in obj) {
+  if (obj.hasOwnProperty(key)) {
+    console.log(key, obj[key]);
+  }
+}
       canvas.add(text);
       canvas.renderAll();
 
@@ -61,7 +61,7 @@
       let link = document.createElement('a');
       link.download = `${item.title}_${item.update_time}.png`;// we want the last date
       link.href = image;
-      //link.click();
+      link.click();
 
 
     });
