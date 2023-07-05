@@ -7,14 +7,18 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital@1&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/2.0.3/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
 </head>
 <body>
   <input type="file" id="jsonFile" name="jsonFile" accept=".json">
   <button id="downloadBtn" disabled>Download Images</button>
+  <button onclick="createPdf()">Create PDFs</button>
   <div id="canvasContainer"></div>
 
   <script>
-  var data;
+  var rawData;
+  var prepData;
 
   $(document).ready(function() {
     $("#jsonFile").change(function(e) {
@@ -22,19 +26,47 @@
       if (file) {
         let reader = new FileReader();
         reader.onload = function(event) {
-          data = JSON.parse(event.target.result);
+          rawData = JSON.parse(event.target.result);
           $("#downloadBtn").prop('disabled', false);
+          if (rawData) {
+      //  generateImages(data);
+      prepareData(rawData);
+      }
         };
         reader.readAsText(file);
       }
     });
+ 
 
     $("#downloadBtn").click(function() {
-      if (data) {
-        generateImages(data);
+      if (rawData) {
+      //  generateImages(data);
+      prepareData(rawData);
       }
     });
   });
+
+  function prepareData(data){
+
+    data.forEach((item, index) => {
+    
+    
+      let title = item.title;
+      let timestamp = new Date(item.update_time * 1000).toLocaleDateString('de-DE', {year: 'numeric', month: '2-digit', day:'2-digit', hour: '2-digit',hour12: false, minute: '2-digit'});
+      let obj = item.mapping;
+
+      for (let key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          if (obj[key].message != null) {
+            let author = obj[key].message.author.role;
+            let message = obj[key].message.content.parts[0];
+            console.log(author, message)
+
+          }
+        }
+      }})}
+
+  
 
   function generateImages(data) {
     $("#canvasContainer").empty(); // Clear the container before adding new canvases
@@ -88,6 +120,24 @@
       link.click();
     });
   }
+
+  function createPdf() {
+        jsonData.forEach((entry, index) => {
+          
+            var markdownText = entry.markdownText;
+            var htmlText = marked(markdownText); // Convert Markdown to HTML
+
+            // We need to replace special characters for jsPDF to process correctly
+            var cleanHtml = htmlText.replace(/#/g, "%23")
+                                    .replace(/\n/g, "%0A");
+
+            var doc = new jsPDF();
+            doc.fromHTML(cleanHtml, 15, 15, { 'width': 170 });
+
+            // Save each document with a different name
+            doc.save(`document-${index + 1}.pdf`);
+        });
+    }
   </script>
 </body>
 </html>
