@@ -4,6 +4,9 @@
   <title>JSON Upload and Image Generator</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/fabric"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital@1&display=swap" rel="stylesheet">
 </head>
 <body>
   <input type="file" id="jsonFile" name="jsonFile" accept=".json">
@@ -46,7 +49,7 @@
       let text = new fabric.Textbox(`Title: ${item.title}\nLast Update: ${timestamp}`, {
         left: 10,
         top: topOffset,
-        fontFamily: 'Arial',
+        fontFamily: 'Roboto Mono', monospace,
         fill: '#000',
         fontSize: 14,
         width: 490
@@ -62,7 +65,7 @@
             let textbox = new fabric.Textbox(`${author}: ${message}`, {
               left: 20,
               top: topOffset,
-              fontFamily: 'Arial',
+              fontFamily: 'Roboto Mono', monospace,
               fill: '#000',
               fontSize: 10,
               width: 480
@@ -80,7 +83,7 @@
       let image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
 
       let link = document.createElement('a');
-      link.download = `${item.title}_${item.update_time}.png`;
+      link.download = `${item.title}_${timestamp}.png`;
       link.href = image;
       link.click();
     });
