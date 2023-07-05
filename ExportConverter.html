@@ -3,7 +3,7 @@
 <head>
   <title>JSON Upload and Image Generator</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.5.1/fabric.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fabric"></script>
 </head>
 <body>
   <input type="file" id="jsonFile" name="jsonFile" accept=".json">
@@ -56,6 +56,8 @@
       link.download = `${item.prompt}_${index}.png`;
       link.href = image;
       link.click();
+
+      console.log(data);
     });
   }
   </script>
