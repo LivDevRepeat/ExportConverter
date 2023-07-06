@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Generate HTML from JSON and Download as File</title>
+</head>
+<body>
+  <button onclick="generateAndDownloadHTML()">Download HTML</button>
+
+  <script>
+    function generateHTMLFromJSON(json) {
+      function processJSON(data) {
+        var html = '';
+
+        if (Array.isArray(data)) {
+          // If the data is an array, process each item
+          data.forEach(function(item) {
+            html += processJSON(item);
+          });
+        } else if (typeof data === 'object') {
+          // If the data is an object, process each property
+          Object.keys(data).forEach(function(key) {
+            var value = data[key];
+            if (Array.isArray(value)) {
+              // If the value is an array, process each element as an individual item
+              value.forEach(function(elementData) {
+                html += '<' + key + '>' + processJSON(elementData) + '</' + key + '>';
+              });
+            } else {
+              // If the value is a string, set it as the text content
+              if (typeof value === 'string') {
+                html += '<' + key + '>' + value + '</' + key + '>';
+              } else {
+                // If the value is another object, recursively process it
+                html += '<' + key + '>' + processJSON(value) + '</' + key + '>';
+              }
+            }
+          });
+        }
+
+        return html;
+      }
+
+      return processJSON(json);
+    }
+
+    function generateAndDownloadHTML() {
+      // Define your JSON object
+      var json = {
+        "div": {
+          "h1": "Hello, World!",
+          "p": "This is a dynamically generated HTML from JSON.",
+          "ul": {
+            "li": ["Item 1", "Item 2", "Item 3"]
+          }
+        }
+      };
+
+      // Generate HTML from JSON
+      var html = generateHTMLFromJSON(json);
+
+      // Create a Blob with the HTML content
+      var blob = new Blob([html], { type: 'text/html' });
+
+      // Create a temporary download link
+      var link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'generated_html.html';
+
+      // Trigger the download
+      link.click();
+
+      // Clean up the temporary link
+      URL.revokeObjectURL(link.href);
+    }
+  </script>
+</body>
+</html>
