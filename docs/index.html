@@ -31,13 +31,11 @@
         reader.readAsText(file);
       }
     });
-
     $("#downloadBtn").click(function() {
       if (data) {
         generateImages(data);
       }
     });
-
     $("#generatedBtn").click(function() {
       if (data) {
         generateImages(data,true);
@@ -89,7 +87,7 @@
       canvas.setHeight(topOffset + 20);
       canvas.renderAll();
      
-      if (download){
+      if (download==true){
         let image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
 
 let link = document.createElement('a');
